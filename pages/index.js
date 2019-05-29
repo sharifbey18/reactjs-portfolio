@@ -1,42 +1,59 @@
 import React from 'react';
-import BaseLayout from '../components/layouts/BaseLayout'
+import BaseLayout from '../components/layouts/BaseLayout';
+import axios from 'axios';
 import '../styles/main.scss';
-class Index extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      title: 'I am Index Page'
+
+import SuperComponent from '../components/SuperComponent'
+class Index extends SuperComponent {
+
+  static async getInitialProps() {
+    let userData = {};
+    try {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/todos/1');
+      userData = response.data
+    } catch (err) {
+      console.error(err);
     }
-    console.log('constructor');
-  }
+    return {initialData: [1,2,3,4], userData: userData};
+    }
+    constructor(props) {
+        super(props)
 
-  componentDidMount() {
-    console.log('componentDidMount');
-  }
+        this.state = {
+            title: 'I am Index Page'
+        }
+    }
 
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-  }
+    componentDidMount() {
+        console.log('componentDidMount')
+    }
 
-  componentWillMount() {
-    console.log('componentWillMount');
-  }
+    componentDidUpdate() {
+        console.log('componentDidUpdate')
+    }
 
-  updateTitle(){
-    this.setState({ title: 'I am updated index page' });
-  }
+    componentWillMount() {
+        console.log('componentWillMount')
+    }
+
+    updateTitle = () => {
+        this.setState({ title: 'I am updated index page' })
+    }
 
   render() {
-    console.log('render');
-    return (
-      <BaseLayout>
-        <h1 className='fromPage'> I am Index page from class component </h1>
-        <h2>{this.state.title}</h2>
-        <button onClick={ () => {this.setState({title: 'I am updated index page'})}}>Change title</button>
-      </BaseLayout>
+    
+      const { title } = this.state
+      const { userData, initialData} = this.props
+      return (
+        <BaseLayout>
+          <h1 className='fromPage'> I am Index page from class component </h1>
+          <h2> {title}</h2>
+          <h2>{userData.title}</h2>
+          <button onClick={this.updateTitle}> Change title</button>
+        </BaseLayout >
 
-    )
-  }
+        )
+    }
 }
 
 export default Index
